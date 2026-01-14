@@ -4,7 +4,7 @@
 
 ## 🎮 Play Now
 
-**[▶ Live Demo](https://actireon.github.io/texted-rp-game/)**
+**[▶ Live Demo](https://actireon.github.io/dragon-repeller-text-rpg/)**
 
 ## About
 
