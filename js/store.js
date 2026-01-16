@@ -1,13 +1,31 @@
 import { state } from './state.js';
-import { elements } from './dom.js';
+import { elements, updatePlayerHealthBar } from './dom.js';
 import { weapons } from './data/weapons.js';
 
+const MAX_HEALTH = 100;
+
 export function buyHealth() {
+  // Check if health is already at max
+  if (state.health >= MAX_HEALTH) {
+    elements.text.innerText =
+      '❤️ Your HP is already at maximum! No need to heal.';
+    return;
+  }
+
   if (state.gold >= 10) {
     state.gold -= 10;
     state.health += 10;
+
+    // Cap health at max
+    if (state.health > MAX_HEALTH) {
+      state.health = MAX_HEALTH;
+    }
+
     elements.goldText.innerText = state.gold;
     elements.healthText.innerText = state.health;
+    updatePlayerHealthBar();
+    elements.text.innerText =
+      '💚 You bought 10 health! Current HP: ' + state.health + '/' + MAX_HEALTH;
   } else {
     elements.text.innerText = 'You do not have enough gold to buy health.';
   }

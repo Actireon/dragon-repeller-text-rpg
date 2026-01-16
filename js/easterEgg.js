@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { elements, update } from './dom.js';
+import { elements, update, updatePlayerHealthBar } from './dom.js';
 import { locations } from './data/locations.js';
 import { lose } from './combat.js';
 
@@ -34,6 +34,7 @@ function pick(guess) {
     elements.text.innerText += 'Wrong! You lose 10 health!';
     state.health -= 10;
     elements.healthText.innerText = state.health;
+    updatePlayerHealthBar();
     if (state.health <= 0) {
       lose();
     }

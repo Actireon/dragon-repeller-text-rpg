@@ -1,28 +1,53 @@
 import { state } from './state.js';
-import { elements, update } from './dom.js';
+import {
+  elements,
+  update,
+  updatePlayerHealthBar,
+  updateMonsterHealthBar,
+  triggerShake,
+  triggerHit,
+} from './dom.js';
 import { weapons } from './data/weapons.js';
 import { monsters } from './data/monsters.js';
 import { locations } from './data/locations.js';
 
 export function attack() {
-  elements.text.innerText =
-    'The ' + monsters[state.fighting].name + ' attacks.';
+  const monster = monsters[state.fighting];
+
+  elements.text.innerText = 'The ' + monster.name + ' attacks.';
   elements.text.innerText +=
     ' You attack it with your ' + weapons[state.currentWeapon].name + '.';
-  state.health -= getMonsterAttackValue(monsters[state.fighting].level);
+
+  // Monster attacks player
+  const damage = getMonsterAttackValue(monster.level);
+  state.health -= damage;
+
+  // Trigger visual effects for player taking damage
+  if (damage > 0) {
+    triggerShake(elements.playerSide);
+    triggerHit(elements.playerPortrait);
+  }
 
   if (isMonsterHit()) {
     // Damage = weapon power + random XP bonus + 1
-    state.monsterHealth -=
+    const playerDamage =
       weapons[state.currentWeapon].power +
       Math.floor(Math.random() * state.xp) +
       1;
+    state.monsterHealth -= playerDamage;
+
+    // Trigger visual effects for monster taking damage
+    triggerShake(elements.monsterSide);
+    triggerHit(elements.monsterImage);
   } else {
     elements.text.innerText += ' You miss.';
   }
 
+  // Update health displays
   elements.healthText.innerText = state.health;
   elements.monsterHealthText.innerText = state.monsterHealth;
+  updatePlayerHealthBar();
+  updateMonsterHealthBar(monster.health);
 
   if (state.health <= 0) {
     lose();

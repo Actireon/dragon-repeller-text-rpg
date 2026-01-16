@@ -1,45 +1,357 @@
+/* === Base Styles & Theme === */
+:root {
+  --bg-dark: #1a1a2e;
+  --bg-darker: #0f0f1a;
+  --card-bg: #16213e;
+  --accent-gold: #f7b731;
+  --accent-gold-light: #fed330;
+  --text-light: #ffffff;
+  --text-muted: #a0a0b0;
+  --health-green: #26de81;
+  --health-yellow: #fed330;
+  --health-red: #fc5c65;
+  --enemy-red: #c0392b;
+  --border-glow: rgba(247, 183, 49, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  background-color: #0a0a23;
+  background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-light);
 }
 
-#text {
-  background-color: #0a0a23;
-  color: #ffffff;
-  padding: 10px;
-}
-
+/* === Main Game Container === */
 #game {
-  max-width: 500px;
-  max-height: 400px;
-  background-color: #ffffff;
-  color: #ffffff;
-  margin: 30px auto 0px;
-  padding: 10px;
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-#controls,
+/* === Stats Bar === */
 #stats {
-  border: 1px solid #0a0a23;
-  padding: 5px;
-  color: #0a0a23;
-}
-
-#monsterStats {
-  display: none;
-  border: 1px solid #0a0a23;
-  padding: 5px;
-  color: #ffffff;
-  background-color: #c70d0d;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 15px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  margin-bottom: 20px;
 }
 
 .stat {
-  padding-right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.stat strong {
+  color: var(--text-light);
+  font-size: 1.1rem;
+}
+
+.stat-icon {
+  font-size: 1.2rem;
+}
+
+/* === Game Arena === */
+#gameArena {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 15px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  border-radius: 12px;
+  margin-bottom: 20px;
+  min-height: 220px;
+}
+
+.arena-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 45%;
+}
+
+/* === Character Portraits === */
+.portrait-frame {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 3px solid var(--accent-gold);
+  box-shadow: 0 0 20px var(--border-glow), inset 0 0 20px rgba(0, 0, 0, 0.5);
+  background: var(--bg-darker);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.portrait-frame:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px var(--border-glow), inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.portrait-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.monster-frame {
+  border-color: var(--enemy-red);
+  box-shadow: 0 0 20px rgba(192, 57, 43, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.monster-frame:hover {
+  box-shadow: 0 0 30px rgba(192, 57, 43, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.character-name {
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-transform: capitalize;
+  color: var(--text-light);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* === VS Indicator === */
+#vsIndicator {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--accent-gold);
+  text-shadow: 0 0 10px var(--accent-gold), 0 0 20px rgba(247, 183, 49, 0.5);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+}
+
+/* === Health Bars === */
+.health-bar-container {
+  width: 100%;
+  max-width: 140px;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 9px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.health-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(180deg, var(--health-green) 0%, #1e9e5a 100%);
+  border-radius: 8px;
+  transition: width 0.4s ease, background 0.4s ease;
+  box-shadow: 0 0 10px rgba(38, 222, 129, 0.4);
+}
+
+.health-bar.warning {
+  background: linear-gradient(180deg, var(--health-yellow) 0%, #d4a017 100%);
+  box-shadow: 0 0 10px rgba(254, 211, 48, 0.4);
+}
+
+.health-bar.danger {
+  background: linear-gradient(180deg, var(--health-red) 0%, #b33939 100%);
+  box-shadow: 0 0 10px rgba(252, 92, 101, 0.4);
+  animation: healthPulse 0.5s ease-in-out infinite;
+}
+
+.health-bar.enemy {
+  background: linear-gradient(180deg, #e74c3c 0%, #c0392b 100%);
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.4);
+}
+
+@keyframes healthPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.health-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* === Monster Side Hidden by Default === */
+#monsterSide {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+#monsterSide.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+#vsIndicator {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+#vsIndicator.visible {
+  opacity: 1;
+}
+
+/* === Combat Animations === */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-6px);
+  }
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes hit {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(2) saturate(0.5);
+  }
+}
+
+.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+.hit {
+  animation: hit 0.3s ease-in-out;
+}
+
+/* === Controls === */
+#controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 button {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
-  color: #0a0a23;
-  background-color: #feac32;
-  background-image: linear-gradient(#fecc4c, #ffac33);
-  border: 3px solid #feac32;
+  color: var(--bg-darker);
+  background: linear-gradient(
+    180deg,
+    var(--accent-gold-light) 0%,
+    var(--accent-gold) 100%
+  );
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(247, 183, 49, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(247, 183, 49, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: linear-gradient(
+    180deg,
+    #ffdd59 0%,
+    var(--accent-gold-light) 100%
+  );
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(247, 183, 49, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* === Text Area === */
+#text {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text-light);
+  padding: 20px;
+  border-radius: 10px;
+  line-height: 1.6;
+  font-size: 1rem;
+  min-height: 80px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* === Responsive Design === */
+@media (max-width: 600px) {
+  #game {
+    margin: 15px;
+    padding: 15px;
+  }
+
+  #stats {
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .portrait-frame {
+    width: 90px;
+    height: 90px;
+  }
+
+  #vsIndicator {
+    font-size: 1.4rem;
+  }
+
+  button {
+    min-width: 100px;
+    padding: 10px 15px;
+    font-size: 0.85rem;
+  }
 }

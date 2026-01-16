@@ -1,14 +1,25 @@
 import { state, resetState } from './state.js';
-import { elements, update, updateStats } from './dom.js';
+import {
+  elements,
+  update,
+  updateStats,
+  showMonster,
+  updatePlayerHealthBar,
+} from './dom.js';
 import { locations } from './data/locations.js';
 import { monsters } from './data/monsters.js';
 
 // Set the current monster and start the fight
 export function goFight() {
   update(locations[3]);
-  state.monsterHealth = monsters[state.fighting].health;
-  elements.monsterStats.style.display = 'block';
-  elements.monsterName.innerText = monsters[state.fighting].name;
+
+  const monster = monsters[state.fighting];
+  state.monsterHealth = monster.health;
+
+  // Show monster in the arena with image
+  showMonster(monster);
+
+  elements.monsterName.innerText = monster.name;
   elements.monsterHealthText.innerText = state.monsterHealth;
 }
 
@@ -42,5 +53,6 @@ export function goCave() {
 export function restart() {
   resetState();
   updateStats();
+  updatePlayerHealthBar();
   goTown();
 }
