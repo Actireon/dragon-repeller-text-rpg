@@ -1,4 +1,5 @@
 import { state } from './state.js';
+import { playSound } from './audio.js';
 import { elements, updatePlayerHealthBar } from './dom.js';
 import { weapons } from './data/weapons.js';
 
@@ -13,6 +14,7 @@ export function buyHealth() {
   }
 
   if (state.gold >= 10) {
+    playSound('purchase');
     state.gold -= 10;
     state.health += 10;
 
@@ -34,6 +36,7 @@ export function buyHealth() {
 export function buyWeapon() {
   if (state.currentWeapon < weapons.length - 1) {
     if (state.gold >= 30) {
+      playSound('purchase');
       state.gold -= 30;
       state.currentWeapon++;
       elements.goldText.innerText = state.gold;
@@ -41,7 +44,7 @@ export function buyWeapon() {
       elements.text.innerText = 'You now have a ' + newWeapon + '.';
       state.inventory.push(newWeapon);
       elements.text.innerText +=
-        ' In your inventory you have: ' + state.inventory;
+        ' In your inventory you have: ' + state.inventory.join(', ');
     } else {
       elements.text.innerText = 'You do not have enough gold to buy a weapon.';
     }
@@ -54,12 +57,13 @@ export function buyWeapon() {
 
 export function sellWeapon() {
   if (state.inventory.length > 1) {
+    playSound('sell');
     state.gold += 15;
     elements.goldText.innerText = state.gold;
     let soldWeapon = state.inventory.shift();
     elements.text.innerText = 'You sold a ' + soldWeapon + '.';
     elements.text.innerText +=
-      ' In your inventory you have: ' + state.inventory;
+      ' In your inventory you have: ' + state.inventory.join(', ');
   } else {
     elements.text.innerText = "Don't sell your only weapon!";
   }

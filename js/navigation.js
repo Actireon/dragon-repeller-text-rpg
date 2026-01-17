@@ -1,4 +1,5 @@
 import { state, resetState } from './state.js';
+import { playSound } from './audio.js';
 import {
   elements,
   update,
@@ -39,6 +40,7 @@ export function fightDragon() {
 }
 
 export function goTown() {
+  playSound('run');
   update(locations[0]);
 }
 
@@ -54,5 +56,5 @@ export function restart() {
   resetState();
   updateStats();
   updatePlayerHealthBar();
-  goTown();
+  update(locations[0]);
 }

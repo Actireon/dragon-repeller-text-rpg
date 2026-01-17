@@ -1,4 +1,5 @@
 import { state } from './state.js';
+import { playSound } from './audio.js';
 import {
   elements,
   update,
@@ -12,6 +13,7 @@ import { monsters } from './data/monsters.js';
 import { locations } from './data/locations.js';
 
 export function attack() {
+  playSound('attack');
   const monster = monsters[state.fighting];
 
   elements.text.innerText = 'The ' + monster.name + ' attacks.';
@@ -78,11 +80,13 @@ function isMonsterHit() {
 }
 
 export function dodge() {
+  playSound('dodge');
   elements.text.innerText =
     'You dodge the attack from the ' + monsters[state.fighting].name;
 }
 
 export function defeatMonster() {
+  playSound('victory');
   state.gold += Math.floor(monsters[state.fighting].level * 6.7);
   state.xp += monsters[state.fighting].level;
   elements.goldText.innerText = state.gold;
@@ -91,9 +95,11 @@ export function defeatMonster() {
 }
 
 export function lose() {
+  playSound('defeat');
   update(locations[5]);
 }
 
 export function winGame() {
+  playSound('victory');
   update(locations[6]);
 }
